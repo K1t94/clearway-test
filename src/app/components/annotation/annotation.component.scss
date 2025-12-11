@@ -1,0 +1,61 @@
+:host {
+  display: block;
+  position: absolute;
+  left: var(--positionX);
+  top: var(--positionY);
+  cursor: move;
+  user-select: none;
+  touch-action: none;
+  transform-origin: top left;
+  transform: scale(var(--annotation-scale, 1));
+}
+
+.annotation.dragging {
+  opacity: 0.9;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  z-index: 1000 !important;
+}
+
+.annotation-content {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 2px solid #FFD700;
+  position: relative;
+  min-width: 100px;
+  max-width: 300px;
+  word-wrap: break-word;
+  cursor: move;
+  backdrop-filter: blur(2px);
+  transform: scale(calc(1 / var(--annotation-scale, 1)));
+}
+
+.annotation-text {
+  margin-right: 20px;
+  min-height: 20px;
+}
+
+.delete-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ff4444;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  transition: transform 0.2s;
+}
+
+.delete-btn:hover {
+  background: #cc0000;
+  transform: scale(1.1);
+}

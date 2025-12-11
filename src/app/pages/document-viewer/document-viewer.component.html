@@ -1,0 +1,72 @@
+<div class="document-viewer" #container>
+  <div class="toolbar">
+    <div class="zoom-controls">
+      <button (click)="zoomOut()" [disabled]="scale() <= 0.5">-</button>
+      <span>{{ (scale() * 100).toFixed(0) }}%</span>
+      <button (click)="zoomIn()" [disabled]="scale() >= 3">+</button>
+    </div>
+
+    <button class="save-btn" (click)="saveAnnotations()">
+      💾 Сохранить
+    </button>
+
+    <button class="add-annotation-btn" (click)="toggleAddMode()"
+            [class.active]="isAddMode()">
+      📝 {{ isAddMode() ? 'Отменить' : 'Добавить аннотацию' }}
+    </button>
+
+    @if (documentId() && document()) {
+      <div class="document-info">
+        Документ: {{ documentId() }} • {{ document()!.pages.length }} страниц
+      </div>
+    }
+  </div>
+
+  @if (document()) {
+    <div class="document-container"
+         [style.transform]="'scale(' + scale() + ')'"
+         [style.transform-origin]="'top center'"
+         (dblclick)="onDocumentDoubleClick($event)">
+
+      @for (page of document()!.pages; track page.pageNumber; let pageIndex = $index) {
+        <div class="page-container" [attr.data-page]="pageIndex + 1">
+          <div class="page-wrapper">
+            <img [src]="page.imageUrl"
+                 [alt]="'Страница ' + (pageIndex + 1)"
+                 class="page-image"
+                 [style.width.px]="page.width"
+                 [style.height.px]="page.height"
+                 loading="lazy">
+
+            <div class="annotations-layer">
+              @for (annotation of annotationsByPage()[pageIndex]; track annotation.id) {
+                <app-annotation
+                  [positionX]="annotation.position.x"
+                  [positionY]="annotation.position.y"
+                  [backgroundColor]="annotation.style.backgroundColor"
+                  [textSize]="annotation.style.fontSize"
+                  [textColor]="annotation.style.color"
+                  [text]="annotation.text"
+                  [scale]="scale()"
+                  (moved)="onAnnotationMoved($event, annotation.id, pageIndex)"
+                  (deleted)="onAnnotationDeleted(annotation.id)">
+                </app-annotation>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="loading">
+      <p>Загрузка документа...</p>
+    </div>
+  }
+
+  @if (isAddMode()) {
+    <div class="add-mode-indicator">
+      <p>Дважды кликните на документ, чтобы добавить аннотацию</p>
+      <small>Или нажмите ESC для отмены</small>
+    </div>
+  }
+</div>

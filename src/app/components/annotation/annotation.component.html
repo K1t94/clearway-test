@@ -1,0 +1,17 @@
+<div class="annotation"
+     [style.z-index]="isDragging ? 1000 : 1"
+     [class.dragging]="isDragging"
+     (mousedown)="startDrag($event)">
+
+  <div class="annotation-content"
+       [style.background-color]="backgroundColor"
+       [style.color]="textColor"
+       [style.font-size.px]="textSize">
+
+    <div class="annotation-text">{{ text }}</div>
+
+    <button class="delete-btn" (click)="onDelete()">
+      ×
+    </button>
+  </div>
+</div>
